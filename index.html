@@ -36,7 +36,7 @@
       font-weight: bold;
     }
 
-    input[type="text"] {
+    input[type="tel"] {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -81,16 +81,16 @@
     <h2>Calculadora de Horas</h2>
 
     <label for="entrada1">Entrada 1</label>
-    <input type="text" id="entrada1" maxlength="5" oninput="formatarHora(this, 'saida1')">
+    <input type="tel" id="entrada1" maxlength="5" inputmode="numeric" oninput="formatarHora(this, 'saida1')">
 
     <label for="saida1">Saída 1</label>
-    <input type="text" id="saida1" maxlength="5" oninput="formatarHora(this, 'entrada2')">
+    <input type="tel" id="saida1" maxlength="5" inputmode="numeric" oninput="formatarHora(this, 'entrada2')">
 
     <label for="entrada2">Entrada 2</label>
-    <input type="text" id="entrada2" maxlength="5" oninput="formatarHora(this, 'saida2')">
+    <input type="tel" id="entrada2" maxlength="5" inputmode="numeric" oninput="formatarHora(this, 'saida2')">
 
     <label for="saida2">Saída 2</label>
-    <input type="text" id="saida2" maxlength="5" oninput="formatarHora(this, null, true)">
+    <input type="tel" id="saida2" maxlength="5" inputmode="numeric" oninput="formatarHora(this, null, true)">
 
     <div class="result" id="resultado">Total: 0 horas</div>
     <div class="error-message" id="erroHora"></div>
