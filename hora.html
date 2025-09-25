@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Horas Automática</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #00b4db, #0083b0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #0083b0;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
+      color: #333;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #d32f2f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Calculadora de Horas</h2>
+
+    <label for="entrada1">Entrada 1</label>
+    <input type="text" id="entrada1" maxlength="5" oninput="formatarHora(this, 'saida1')">
+
+    <label for="saida1">Saída 1</label>
+    <input type="text" id="saida1" maxlength="5" oninput="formatarHora(this, 'entrada2')">
+
+    <label for="entrada2">Entrada 2</label>
+    <input type="text" id="entrada2" maxlength="5" oninput="formatarHora(this, 'saida2')">
+
+    <label for="saida2">Saída 2</label>
+    <input type="text" id="saida2" maxlength="5" oninput="formatarHora(this, null, true)">
+
+    <div class="result" id="resultado">Total: 0 horas</div>
+    <div class="error-message" id="erroHora"></div>
+
+    <button onclick="limparCampos()">Limpar</button>
+  </div>
+
+  <script>
+    function formatarHora(campo, proximoId, calcular = false) {
+      let valor = campo.value.replace(/\D/g, '');
+
+      if (valor.length >= 4) {
+        const hora = parseInt(valor.substring(0, 2));
+        const minuto = parseInt(valor.substring(2, 4));
+        const erroDiv = document.getElementById('erroHora');
+
+        if (hora > 23 || minuto > 59) {
+          campo.value = '';
+          erroDiv.innerText = 'Horário inválido. Use o formato entre 00:00 e 23:59.';
+          campo.focus();
+          return;
+        }
+
+        erroDiv.innerText = '';
+        campo.value = `${hora.toString().padStart(2, '0')}:${minuto.toString().padStart(2, '0')}`;
+
+        if (proximoId) {
+          document.getElementById(proximoId).focus();
+        }
+
+        if (calcular) {
+          calcularHoras();
+        }
+      }
+    }
+
+    function calcularHoras() {
+      const entrada1 = document.getElementById('entrada1').value;
+      const saida1 = document.getElementById('saida1').value;
+      const entrada2 = document.getElementById('entrada2').value;
+      const saida2 = document.getElementById('saida2').value;
+
+      let totalMinutos = 0;
+
+      function calcMinutos(inicio, fim) {
+        const [h1, m1] = inicio.split(":").map(Number);
+        const [h2, m2] = fim.split(":").map(Number);
+        return (h2 * 60 + m2) - (h1 * 60 + m1);
+      }
+
+      if (entrada1 && saida1) {
+        totalMinutos += calcMinutos(entrada1, saida1);
+      }
+
+      if (entrada2 && saida2) {
+        totalMinutos += calcMinutos(entrada2, saida2);
+      }
+
+      const resultado = document.getElementById('resultado');
+
+      if (totalMinutos > 0) {
+        const horas = Math.floor(totalMinutos / 60);
+        const minutos = totalMinutos % 60;
+        resultado.innerText = `Total: ${horas}h ${minutos}min`;
+      } else {
+        resultado.innerText = `Total: 0 horas`;
+      }
+    }
+
+    function limparCampos() {
+      document.getElementById('entrada1').value = '';
+      document.getElementById('saida1').value = '';
+      document.getElementById('entrada2').value = '';
+      document.getElementById('saida2').value = '';
+      document.getElementById('resultado').innerText = 'Total: 0 horas';
+      document.getElementById('erroHora').innerText = '';
+      document.getElementById('entrada1').focus();
+    }
+  </script>
+</body>
+</html>
